@@ -1,0 +1,32 @@
+# Example Banner Generator Configuration
+# Copy this file to banner-generator.toml and customize as needed
+
+[server]
+port = 8080
+host = "0.0.0.0"
+
+[fonts]
+fonts_dir = "fonts"
+default_family = "GT Pressura"
+enable_web_fonts = false
+
+# Note: Font registry is automatically loaded from fonts/fonts.toml
+# You can add custom fonts there
+
+[templates]
+templates_dir = "templates"
+default_template = "banner"
+
+[templates.templates.banner]
+path = "banner.svg.mustache"
+description = "Default banner template"
+
+[github]
+# Set your GitHub token here or via GITHUB_TOKEN env var
+token = ""
+
+[access_control]
+enabled = false
+# Example: allowed_orgs = ["myorg", "anotherorg"]
+allowed_orgs = []
+allowed_users = []
