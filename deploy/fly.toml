@@ -1,0 +1,34 @@
+# fly.toml app configuration file generated for numtide-banners on 2025-07-29T10:25:16+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'numtide-banners'
+primary_region = 'ams'
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  BANNER_CACHE_TTL = '6h'
+  GIN_MODE = 'release'
+  PORT = '8080'
+
+[processes]
+  app = './banner-api'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [http_service.concurrency]
+    type = 'requests'
+    hard_limit = 250
+    soft_limit = 200
+
+[[vm]]
+  size = 'shared-cpu-1x'

@@ -1,0 +1,58 @@
+# Git files
+.git
+.gitignore
+
+# Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+banner-api
+banner-cli
+
+# Development files
+.air.toml
+.env
+.env.local
+.direnv
+.envrc
+
+# Documentation
+*.md
+docs/
+
+# CI/CD
+.github/
+
+# Nix files
+flake.nix
+flake.lock
+devshell.nix
+result
+result-*
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+*.coverprofile
+coverage.html
+coverage.out
+
+# Temporary files
+tmp/
+temp/
+
+# Logs
+*.log

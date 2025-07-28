@@ -1,0 +1,28 @@
+# Font Registry Configuration
+# This file documents the font mappings available in the banner generator
+
+[[fonts]]
+# GT Pressura font family
+family = "gt-pressura"
+name = "GT Pressura Regular"
+aliases = [
+  "GT Pressura",
+  "gt pressura", 
+  "GTpressura"
+]
+variants = { ttf = "gt-pressura-regular.ttf", woff = "web/gt-pressura-regular.woff", woff2 = "web/gt-pressura-regular.woff2" }
+
+# Add more fonts here as needed
+# Example:
+# [[fonts]]
+# family = "roboto"
+# name = "Roboto Regular"
+# aliases = ["Roboto"]
+# variants = { ttf = "roboto-regular.ttf", woff = "web/roboto-regular.woff", woff2 = "web/roboto-regular.woff2" }
+
+# Usage notes:
+# - The 'family' is the primary identifier used internally
+# - 'aliases' allow the font to be referenced by different names in SVG
+# - 'variants' map format types to file paths relative to the fonts directory
+# - For auto-font mode, any font-family attribute in SVG text elements will be
+#   matched against the family names and aliases

@@ -1,0 +1,46 @@
+# Banner Generator Configuration
+
+[server]
+port = 8080
+host = "0.0.0.0"
+read_timeout = "30s"
+write_timeout = "30s"
+
+[fonts]
+# Directory containing font files
+fonts_dir = "fonts"
+# Directory containing web font files
+web_fonts_dir = "fonts/web"
+# Default font family
+default_family = "GT Pressura"
+# Enable web fonts in SVG output (false = embed fonts as base64)
+enable_web_fonts = false
+# Base URL for serving web fonts (e.g., "https://cdn.example.com/fonts")
+web_fonts_base_url = "https://banner.numtide.com"
+
+[templates]
+# Directory containing template files
+templates_dir = "templates"
+# Default template to use
+default_template = "banner"
+
+# Available templates
+[templates.templates.banner]
+path = "banner.svg.mustache"
+description = "Default banner template with auto-scaling text"
+
+[templates.templates.banner-stats]
+path = "banner-stats.svg.mustache"
+description = "Banner template with repository statistics"
+
+[github]
+# GitHub API token (can be set via GITHUB_TOKEN env var)
+token = ""
+
+[access_control]
+# Enable access control - restricted to numtide and nix-community
+enabled = true
+# Allowed GitHub organizations
+allowed_orgs = ["numtide", "nix-community"]
+# Allowed GitHub users (for specific exceptions if needed)
+allowed_users = []
