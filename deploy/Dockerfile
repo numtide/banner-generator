@@ -20,7 +20,7 @@ RUN go build -o banner-api cmd/banner-api/main.go
 FROM alpine:latest
 
 # Install runtime dependencies
-RUN apk add --no-cache ca-certificates tzdata rsvg-convert
+RUN apk add --no-cache ca-certificates tzdata rsvg-convert fontconfig ttf-dejavu font-noto
 
 WORKDIR /app
 
@@ -33,6 +33,11 @@ COPY --from=builder /app/deploy/templates ./deploy/templates
 
 # Copy configuration file
 COPY --from=builder /app/deploy/banner-generator.toml ./deploy/
+
+# Install custom fonts system-wide for rsvg-convert
+RUN mkdir -p /usr/share/fonts/truetype && \
+    cp ./deploy/fonts/*.ttf /usr/share/fonts/truetype/ && \
+    fc-cache -f -v
 
 # Create a non-root user
 RUN adduser -D -g '' appuser
