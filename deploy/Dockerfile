@@ -20,7 +20,7 @@ RUN go build -o banner-api cmd/banner-api/main.go
 FROM alpine:latest
 
 # Install runtime dependencies
-RUN apk add --no-cache ca-certificates tzdata
+RUN apk add --no-cache ca-certificates tzdata rsvg-convert
 
 WORKDIR /app
 
