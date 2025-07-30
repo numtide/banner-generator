@@ -1,0 +1,67 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style id="font-css">
+    /* Font CSS will be injected here */
+  </style>
+  <style>
+    g { fill: black; }
+    @media (prefers-color-scheme: dark) {
+      g { fill: white; }
+    }
+  </style>
+  
+  <!-- Background -->
+  <g clip-path="url(#clip0_2013_3)">
+    <rect width="1280" height="640" fill="black"/>
+    <g clip-path="url(#clip1_2013_3)">
+      <rect width="1280" height="640" fill="black"/>
+      <g clip-path="url(#clip2_2013_3)">
+        <g opacity="0.32">
+          <rect x="256" width="1" height="640" fill="#DFD1C3"/>
+          <rect x="512" width="1" height="640" fill="#DFD1C3"/>
+          <rect x="768" width="1" height="640" fill="#DFD1C3"/>
+          <rect x="1023" width="1" height="640" fill="#DFD1C3"/>
+          <rect x="1279" width="1" height="640" fill="#DFD1C3"/>
+          <rect width="1" height="640" fill="#DFD1C3"/>
+          <rect y="1" width="1" height="1280" transform="rotate(-90 0 1)" fill="#DFD1C3"/>
+          <rect y="640" width="1" height="1280" transform="rotate(-90 0 640)" fill="#DFD1C3"/>
+        </g>
+        <path d="M881.724 39.0471L970.82 128.143L881.724 217.238L792.629 128.143L881.724 39.0471Z" stroke="#DFD1C3"/>
+        <path d="M1279.5 0.5V256.5H1023.5V0.5L1279.5 0.5Z" stroke="#DFD1C3"/>
+        <path d="M1151.23 -53.5123L1331.76 128L1151.23 309.512L970.705 128L1151.23 -53.5123Z" stroke="#DFD1C3"/>
+        <path d="M1150.8 309.707L1239.9 398.802L1150.8 487.898L1061.71 398.802L1150.8 309.707Z" stroke="#DFD1C3"/>
+      </g>
+    </g>
+  </g>
+  
+  <!-- Repository name -->
+  <text id="repo-name" fill="white" xml:space="preserve" style="white-space: pre" font-family="GT Pressura" font-size="120" letter-spacing="-0.04em" x="50" y="320">
+    <tspan>repository-name</tspan>
+  </text>
+  
+  <!-- Description -->
+  <text id="description" fill="white" xml:space="preserve" style="white-space: pre" font-family="GT Pressura" font-size="48" letter-spacing="-0.03em" x="50" y="420">
+    <tspan id="desc-line-1" x="50" dy="0">Description line 1</tspan>
+    <tspan id="desc-line-2" x="50" dy="60">Description line 2</tspan>
+    <tspan id="desc-line-3" x="50" dy="60">Description line 3</tspan>
+  </text>
+  
+  <!-- Stats group -->
+  <g id="stats-group">
+    <text id="stats-stars" fill="white" font-family="GT Pressura" font-size="36" x="50" y="580">⭐ 0</text>
+    <text id="stats-forks" fill="white" font-family="GT Pressura" font-size="36" x="200" y="580">🍴 0</text>
+    <text id="stats-language" fill="white" font-family="GT Pressura" font-size="36" x="350" y="580">Go</text>
+  </g>
+  
+  <!-- Decorative elements -->
+  <defs>
+    <clipPath id="clip0_2013_3">
+      <rect width="1280" height="640" fill="white"/>
+    </clipPath>
+    <clipPath id="clip1_2013_3">
+      <rect width="1280" height="640" fill="white"/>
+    </clipPath>
+    <clipPath id="clip2_2013_3">
+      <rect width="1280" height="640" fill="white"/>
+    </clipPath>
+  </defs>
+</svg>

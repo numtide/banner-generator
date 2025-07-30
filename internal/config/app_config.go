@@ -16,8 +16,8 @@ type AppConfig struct {
 	// Font configuration
 	Fonts FontsConfig `toml:"fonts"`
 
-	// Template configuration
-	Templates TemplateConfig `toml:"templates"`
+	// Template path
+	TemplatePath string `toml:"template_path"`
 
 	// GitHub configuration
 	GitHub GitHubConfig `toml:"github"`
@@ -50,24 +50,6 @@ type FontsConfig struct {
 
 	// Base URL for web fonts (when serving fonts via HTTP)
 	WebFontsBaseURL string `toml:"web_fonts_base_url"`
-}
-
-// TemplateConfig contains template settings
-type TemplateConfig struct {
-	// Path to templates directory
-	TemplatesDir string `toml:"templates_dir"`
-
-	// Default template to use
-	DefaultTemplate string `toml:"default_template"`
-
-	// Available templates
-	Templates map[string]TemplateEntry `toml:"templates"`
-}
-
-// TemplateEntry represents a single template
-type TemplateEntry struct {
-	Path        string `toml:"path"`
-	Description string `toml:"description"`
 }
 
 // GitHubConfig contains GitHub API settings
@@ -117,6 +99,11 @@ func LoadConfig(path string) (*AppConfig, error) {
 		return nil, fmt.Errorf("failed to resolve paths: %w", err)
 	}
 
+	// Validate required fields
+	if config.TemplatePath == "" {
+		return nil, fmt.Errorf("template_path is required in configuration")
+	}
+
 	return config, nil
 }
 
@@ -136,20 +123,7 @@ func DefaultConfig() *AppConfig {
 			EnableWebFonts:  false,
 			WebFontsBaseURL: "",
 		},
-		Templates: TemplateConfig{
-			TemplatesDir:    "deploy/templates",
-			DefaultTemplate: "banner",
-			Templates: map[string]TemplateEntry{
-				"banner": {
-					Path:        "banner.svg.mustache",
-					Description: "Default banner template",
-				},
-				"banner-stats": {
-					Path:        "banner-stats.svg.mustache",
-					Description: "Banner with repository statistics",
-				},
-			},
-		},
+		TemplatePath: "", // Required in config file
 		GitHub: GitHubConfig{
 			Token: "",
 		},
@@ -192,9 +166,9 @@ func (c *AppConfig) resolvePaths(basePath string) error {
 		c.Fonts.WebFontsDir = filepath.Join(basePath, c.Fonts.WebFontsDir)
 	}
 
-	// Resolve template directory
-	if !filepath.IsAbs(c.Templates.TemplatesDir) {
-		c.Templates.TemplatesDir = filepath.Join(basePath, c.Templates.TemplatesDir)
+	// Resolve template path
+	if c.TemplatePath != "" && !filepath.IsAbs(c.TemplatePath) {
+		c.TemplatePath = filepath.Join(basePath, c.TemplatePath)
 	}
 
 	return nil

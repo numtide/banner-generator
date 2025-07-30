@@ -15,6 +15,18 @@ type Font struct {
 	Variants map[string]string // Map of format to file path (e.g., "woff2" -> "path/to/font.woff2")
 }
 
+// GetFontPath returns the path to the font file, preferring WOFF format
+func (f *Font) GetFontPath() string {
+	// Try formats in order of preference
+	formats := []string{"woff", "woff2", "ttf", "otf"}
+	for _, format := range formats {
+		if path, ok := f.Variants[format]; ok {
+			return path
+		}
+	}
+	return ""
+}
+
 // Registry manages fonts for both web serving and local access
 type Registry struct {
 	fonts   map[string]*Font  // Key is font family name

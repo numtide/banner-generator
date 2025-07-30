@@ -2,7 +2,7 @@ package config
 
 // Default font configuration
 const (
-	DefaultFontDir   = "fonts"
+	DefaultFontDir   = "deploy/fonts"
 	DefaultFontFile  = "gt-pressura-regular.ttf"
 	DefaultFontAlias = "gt-pressura"
 )

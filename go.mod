@@ -6,7 +6,6 @@ toolchain go1.24.4
 
 require (
 	github.com/BurntSushi/toml v1.5.0
-	github.com/cbroglie/mustache v1.4.0
 	github.com/google/go-github/v56 v56.0.0
 	github.com/gorilla/mux v1.8.1
 	github.com/spf13/cobra v1.9.1

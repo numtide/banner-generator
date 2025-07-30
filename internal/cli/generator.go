@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -21,53 +20,25 @@ type Generator struct {
 	githubClient *github.Client
 }
 
-// NewGenerator creates a new PNG generator with default config
-func NewGenerator(githubToken string) (*Generator, error) {
-	// Create font registry with default font directory
-	fontRegistry := fonts.DefaultRegistryWithConfig(config.DefaultFontDir)
+// NewGeneratorWithConfig creates a new PNG generator with provided config
+func NewGeneratorWithConfig(appConfig *config.AppConfig) (*Generator, error) {
+	// Create font manager from config
+	fontManager := fonts.NewManager(appConfig.Fonts.FontsDir)
 
-	// Use default template with auto font builder
-	templatePath := banner.LocateTemplate("banner.svg.mustache")
-	svgBuilder := banner.NewAutoFontBuilder(fontRegistry, templatePath, "")
+	// Use template path from config
+	templatePath := appConfig.TemplatePath
+
+	svgBuilder := banner.NewSimpleSVGBuilder(
+		fontManager,
+		templatePath,
+		appConfig.Fonts.EnableWebFonts,
+		appConfig.Fonts.WebFontsBaseURL,
+	)
 
 	return &Generator{
 		svgBuilder:   svgBuilder,
-		githubClient: github.NewClient(githubToken),
+		githubClient: github.NewClient(appConfig.GitHub.Token),
 	}, nil
-}
-
-// NewGeneratorWithConfig creates a new PNG generator with provided config
-func NewGeneratorWithConfig(appConfig *config.AppConfig) (*Generator, error) {
-	// Create font registry from config
-	fontRegistry := createFontRegistry(appConfig)
-
-	// Determine template path
-	templateName := appConfig.Templates.DefaultTemplate
-	if template, ok := appConfig.Templates.Templates[templateName]; ok {
-		templatePath := filepath.Join(appConfig.Templates.TemplatesDir, template.Path)
-
-		// Determine base URL for web fonts
-		fontBaseURL := ""
-		if appConfig.Fonts.EnableWebFonts {
-			fontBaseURL = appConfig.Fonts.WebFontsBaseURL
-		}
-
-		svgBuilder := banner.NewAutoFontBuilder(fontRegistry, templatePath, fontBaseURL)
-
-		return &Generator{
-			svgBuilder:   svgBuilder,
-			githubClient: github.NewClient(appConfig.GitHub.Token),
-		}, nil
-	}
-
-	return nil, fmt.Errorf("template '%s' not found in configuration", templateName)
-}
-
-// createFontRegistry creates a font registry from the configuration
-func createFontRegistry(appConfig *config.AppConfig) *fonts.Registry {
-	// Always use the existing font system which loads from fonts.toml
-	// The config loader already merges fonts.toml into the app config
-	return fonts.DefaultRegistryWithConfig(appConfig.Fonts.FontsDir)
 }
 
 // GeneratePNG generates a PNG banner for the specified repository
@@ -95,13 +66,14 @@ func (g *Generator) GeneratePNG(repoPath, outputPath string) error {
 		return fmt.Errorf("failed to fetch repository data: %w", err)
 	}
 
-	fmt.Printf("Generating banner for: %s\n", repoData.RepoName)
-	if repoData.RepoDescription != "" {
-		fmt.Printf("Description: %s\n", repoData.RepoDescription)
+	fmt.Printf("Generating banner for: %s\n", repoData.Name)
+	if repoData.Description != "" {
+		fmt.Printf("Description: %s\n", repoData.Description)
 	}
 
 	// Generate SVG
-	svg, err := g.svgBuilder.BuildSVG(repoData)
+	// Generate SVG directly with repository data
+	svg, err := g.svgBuilder.BuildBanner(repoData)
 	if err != nil {
 		return fmt.Errorf("failed to generate SVG: %w", err)
 	}

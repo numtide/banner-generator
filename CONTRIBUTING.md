@@ -27,7 +27,7 @@ banner-generator/
 │   └── utils/            # Shared utilities
 ├── deploy/               # Deployment configuration and assets
 │   ├── fonts/           # Font files and configuration
-│   ├── templates/       # SVG Mustache templates
+│   ├── templates/       # SVG templates
 │   └── *.toml           # Configuration files
 └── docs/                 # Documentation
 
@@ -62,31 +62,55 @@ banner-generator/
    ```
 
 
+## Configuration
+
+The configuration file requires a `template_path` field:
+
+```toml
+# Required - path to your SVG template
+template_path = "templates/banner.svg"
+
+[fonts]
+enable_web_fonts = false  # Embed fonts as base64 when false
+default_family = "GT Pressura"
+```
+
 ## Adding New Fonts
 
-1. Add font files to the `deploy/fonts/` directory
+1. Add font files to the `deploy/fonts/` directory (WOFF format preferred)
 2. Update `deploy/fonts/fonts.toml` with the new font configuration:
    ```toml
    [[fonts]]
    family = "your-font-family"
    name = "Your Font Name"
    aliases = ["YourFont", "your font"]
-   variants = { ttf = "your-font.ttf", woff = "web/your-font.woff", woff2 = "web/your-font.woff2" }
+   # WOFF format is preferred over WOFF2
+   variants = { ttf = "your-font.ttf", woff = "web/your-font.woff" }
    ```
-3. Test that the font works in templates
+3. The font will be automatically detected from `font-family` attributes in templates
 
 ## Creating New Templates
 
-1. Create a new `.svg.mustache` file in `deploy/templates/`
-2. Use `font-family` attributes on text elements - fonts will be automatically detected
-3. Available template variables:
-   - `{{repoName}}` - Repository name (without owner)
-   - `{{repoNameFontSize}}` - Calculated font size
-   - `{{description}}` - Repository description
-   - `{{descriptionLines}}` - Multi-line description array
-   - `{{language}}` - Primary programming language
-   - `{{hasDescription}}` - Boolean for conditionals
-   - `{{hasLanguage}}` - Boolean for conditionals
+Templates are pure SVG files - no templating engine required:
+
+1. Create a new `.svg` file in `deploy/templates/`
+2. Add IDs to elements that should be dynamic:
+   - `id="repo-name"` - Repository name text element
+   - `id="description"` - Description text element (with tspan children for multi-line)
+   - `id="stats-stars"` - Stars count text element
+   - `id="stats-forks"` - Forks count text element
+   - `id="stats-language"` - Language text element
+   - `id="stats-group"` - Group to hide if no stats
+   - `id="font-css"` - Style element where font CSS will be injected
+3. Use `font-family` attributes on text elements - fonts will be automatically detected and embedded
+
+### How It Works
+
+- The system uses regex-based string replacement to update SVG elements by ID
+- Text content is wrapped in `<tspan>` elements to preserve structure
+- Multi-line descriptions maintain their tspan layout with proper x/dy attributes
+- Fonts are embedded as base64 data URIs or referenced as URLs based on configuration
+- No XML parsing means no namespace duplication issues
 
 ## Submitting Changes
 

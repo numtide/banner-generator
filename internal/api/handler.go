@@ -75,7 +75,7 @@ func (h *Handler) GenerateBanner(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Generate SVG
-	svg, err := h.svgBuilder.BuildSVG(repoData)
+	svg, err := h.svgBuilder.BuildBanner(repoData)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to generate banner: %v", err), http.StatusInternalServerError)
 		return
@@ -122,7 +122,7 @@ func (h *Handler) GeneratePNGBanner(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Generate SVG
-	svg, err := h.svgBuilder.BuildSVG(repoData)
+	svg, err := h.svgBuilder.BuildBanner(repoData)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Failed to generate banner: %v", err), http.StatusInternalServerError)
 		return

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/google/go-github/v56/github"
-	"github.com/numtide/banner-generator/internal/banner"
 	"golang.org/x/oauth2"
 	"time"
 )
@@ -16,7 +15,7 @@ type Client struct {
 }
 
 type cacheEntry struct {
-	data      *banner.BannerData
+	data      *Repository
 	timestamp time.Time
 }
 
@@ -47,7 +46,7 @@ func NewClient(token string) *Client {
 }
 
 // GetRepositoryData fetches repository metadata from GitHub
-func (c *Client) GetRepositoryData(ctx context.Context, owner, repo string) (*banner.BannerData, error) {
+func (c *Client) GetRepositoryData(ctx context.Context, owner, repo string) (*Repository, error) {
 	// Check cache first
 	cacheKey := fmt.Sprintf("%s/%s", owner, repo)
 	if entry, ok := c.cache[cacheKey]; ok {
@@ -64,13 +63,13 @@ func (c *Client) GetRepositoryData(ctx context.Context, owner, repo string) (*ba
 	}
 
 	// Use the original repo name as provided by the user to preserve capitalization
-	data := &banner.BannerData{
-		RepoName:        repo,
-		RepoDescription: repository.GetDescription(),
+	data := &Repository{
+		Name:            repo,
+		Description:     repository.GetDescription(),
 		Owner:           owner,
 		Language:        repository.GetLanguage(),
-		Stars:           repository.GetStargazersCount(),
-		Forks:           repository.GetForksCount(),
+		StargazersCount: repository.GetStargazersCount(),
+		ForksCount:      repository.GetForksCount(),
 	}
 
 	// Update cache

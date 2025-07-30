@@ -12,7 +12,6 @@ Add this to any Numtide repository README:
 ![Banner](https://banner.numtide.com/banner/numtide/your-repo.svg)
 ```
 
-
 ## Usage
 
 ```bash
@@ -39,24 +38,19 @@ banner-cli generate-upload owner/repo --token $GITHUB_TOKEN
 
 See `deploy/banner-generator.toml` for configuration options.
 
-## Template Variables
+## Template Structure
 
-Templates receive the following variables:
+Templates are pure SVG files with specific element IDs that get replaced dynamically:
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `{{fontCSS}}` | Auto-generated @font-face CSS | (CSS string) |
-| `{{repoName}}` | Repository name | "banner-generator" |
-| `{{repoNameFontSize}}` | Calculated font size | "32" |
-| `{{owner}}` | Repository owner | "numtide" |
-| `{{description}}` | Repository description | "Generate banners..." |
-| `{{descriptionLines}}` | Multi-line description array | [{text: "...", y: 100}] |
-| `{{language}}` | Primary language | "Go" |
-| `{{stars}}` | Formatted star count | "1.2k" |
-| `{{forks}}` | Formatted fork count | "45" |
-| `{{hasDescription}}` | Has description? | true/false |
-| `{{hasLanguage}}` | Has language? | true/false |
-| `{{hasStats}}` | Has stats? | true/false |
+| Element ID | Description | Example Content |
+|------------|-------------|-----------------|
+| `repo-name` | Repository name text | "banner-generator" |
+| `description` | Description text (can contain tspan elements) | "Generate banners..." |
+| `stats-stars` | Stars count text | "⭐ 1.2k" |
+| `stats-forks` | Forks count text | "🍴 45" |
+| `stats-language` | Primary language text | "Go" |
+| `stats-group` | Stats container (hidden if no data) | - |
+| `font-css` | Style element for font injection | - |
 
 
 ## Development

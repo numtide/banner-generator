@@ -1,5 +1,8 @@
 # Banner Generator Configuration
 
+# Template path (relative to this config file)
+template_path = "templates/banner.svg"
+
 [server]
 port = 8080
 host = "0.0.0.0"
@@ -17,21 +20,6 @@ default_family = "GT Pressura"
 enable_web_fonts = false
 # Base URL for serving web fonts (e.g., "https://cdn.example.com/fonts")
 web_fonts_base_url = "https://banner.numtide.com"
-
-[templates]
-# Directory containing template files
-templates_dir = "templates"
-# Default template to use
-default_template = "banner"
-
-# Available templates
-[templates.templates.banner]
-path = "banner.svg.mustache"
-description = "Default banner template with auto-scaling text"
-
-[templates.templates.banner-stats]
-path = "banner-stats.svg.mustache"
-description = "Banner template with repository statistics"
 
 [github]
 # GitHub API token (can be set via GITHUB_TOKEN env var)
