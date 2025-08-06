@@ -1,4 +1,4 @@
-![Numtide Banner Generator](https://banner.numtide.com/banner/numtide/banner-generator.svg)
+![Numtide Banner Generator](https://banner.numtide.com/banner/numtide/banner-generator.svg?1)
 
 Generates SVG and PNG banners for Numtide's GitHub repositories with automatic metadata fetching.
 
