@@ -24,6 +24,9 @@ type AppConfig struct {
 
 	// Access control configuration
 	AccessControl AccessControlConfig `toml:"access_control"`
+
+	// Cache configuration
+	Cache CacheConfig `toml:"cache"`
 }
 
 // ServerConfig contains HTTP server settings
@@ -68,6 +71,15 @@ type AccessControlConfig struct {
 
 	// Allowed GitHub users
 	AllowedUsers []string `toml:"allowed_users"`
+}
+
+// CacheConfig contains cache-related settings
+type CacheConfig struct {
+	// HTTP cache duration (e.g., "1h", "30m", "300s")
+	HTTPCacheDuration string `toml:"http_cache_duration"`
+
+	// API cache duration (e.g., "1h", "30m", "300s")
+	APICacheDuration string `toml:"api_cache_duration"`
 }
 
 // LoadConfig loads configuration from a TOML file
@@ -131,6 +143,10 @@ func DefaultConfig() *AppConfig {
 			Enabled:      false,
 			AllowedOrgs:  []string{},
 			AllowedUsers: []string{},
+		},
+		Cache: CacheConfig{
+			HTTPCacheDuration: "1h",
+			APICacheDuration:  "1h",
 		},
 	}
 }

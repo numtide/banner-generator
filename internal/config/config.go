@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 // Config holds the server configuration
@@ -12,12 +13,20 @@ type Config struct {
 	//   - "org" or "user" to allow all repos from that org/user
 	//   - "owner/repo" to allow a specific repo
 	AllowList []string
+
+	// HTTPCacheDuration is how long browsers/CDNs should cache banner images
+	HTTPCacheDuration time.Duration
+
+	// APICacheDuration is how long to cache GitHub API responses
+	APICacheDuration time.Duration
 }
 
 // NewConfig creates a new config from a list of allowed entries
 func NewConfig(allowList []string) *Config {
 	return &Config{
-		AllowList: allowList,
+		AllowList:         allowList,
+		HTTPCacheDuration: 1 * time.Hour, // Default to 1 hour
+		APICacheDuration:  1 * time.Hour, // Default to 1 hour
 	}
 }
 

@@ -10,8 +10,9 @@ import (
 
 // Client wraps the GitHub API client
 type Client struct {
-	client *github.Client
-	cache  map[string]*cacheEntry
+	client        *github.Client
+	cache         map[string]*cacheEntry
+	cacheDuration time.Duration
 }
 
 type cacheEntry struct {
@@ -20,7 +21,7 @@ type cacheEntry struct {
 }
 
 // NewClient creates a new GitHub client
-func NewClient(token string) *Client {
+func NewClient(token string, cacheDuration time.Duration) *Client {
 	ctx := context.Background()
 	var tc *oauth2.TokenSource
 
@@ -40,8 +41,9 @@ func NewClient(token string) *Client {
 	}
 
 	return &Client{
-		client: ghClient,
-		cache:  make(map[string]*cacheEntry),
+		client:        ghClient,
+		cache:         make(map[string]*cacheEntry),
+		cacheDuration: cacheDuration,
 	}
 }
 
@@ -50,8 +52,8 @@ func (c *Client) GetRepositoryData(ctx context.Context, owner, repo string) (*Re
 	// Check cache first
 	cacheKey := fmt.Sprintf("%s/%s", owner, repo)
 	if entry, ok := c.cache[cacheKey]; ok {
-		// Cache entries are valid for 5 minutes
-		if time.Since(entry.timestamp) < 5*time.Minute {
+		// Use configured cache duration
+		if time.Since(entry.timestamp) < c.cacheDuration {
 			return entry.data, nil
 		}
 	}

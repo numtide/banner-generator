@@ -21,7 +21,11 @@ import (
 func main() {
 	// Parse command-line flags
 	var configPath string
+	var httpCacheDurationFlag string
+	var apiCacheDurationFlag string
 	flag.StringVar(&configPath, "config", "", "Path to configuration file")
+	flag.StringVar(&httpCacheDurationFlag, "http-cache", "", "HTTP cache duration (e.g., '1h', '30m', '300s')")
+	flag.StringVar(&apiCacheDurationFlag, "api-cache", "", "API cache duration (e.g., '1h', '30m', '300s')")
 	flag.Parse()
 
 	// Load configuration
@@ -40,6 +44,31 @@ func main() {
 		log.Printf("Access control enabled with allowlist: %v", allowedEntries)
 	}
 	cfg := config.NewConfig(allowedEntries)
+
+	// Override cache durations from command-line flags if provided
+	if httpCacheDurationFlag != "" {
+		appConfig.Cache.HTTPCacheDuration = httpCacheDurationFlag
+	}
+	if apiCacheDurationFlag != "" {
+		appConfig.Cache.APICacheDuration = apiCacheDurationFlag
+	}
+
+	// Parse cache durations
+	httpCacheDuration, err := time.ParseDuration(appConfig.Cache.HTTPCacheDuration)
+	if err != nil {
+		log.Printf("Invalid HTTP cache duration '%s', using default 1h: %v", appConfig.Cache.HTTPCacheDuration, err)
+		httpCacheDuration = 1 * time.Hour
+	}
+	cfg.HTTPCacheDuration = httpCacheDuration
+
+	apiCacheDuration, err := time.ParseDuration(appConfig.Cache.APICacheDuration)
+	if err != nil {
+		log.Printf("Invalid API cache duration '%s', using default 1h: %v", appConfig.Cache.APICacheDuration, err)
+		apiCacheDuration = 1 * time.Hour
+	}
+	cfg.APICacheDuration = apiCacheDuration
+
+	log.Printf("Cache configuration: HTTP=%v, API=%v", httpCacheDuration, apiCacheDuration)
 
 	// Create font manager from config
 	fontManager := fonts.NewManager(appConfig.Fonts.FontsDir)
@@ -65,7 +94,7 @@ func main() {
 	svgBuilder := banner.NewSimpleSVGBuilder(fontManager, templatePath, appConfig.Fonts.EnableWebFonts, fontBaseURL)
 	log.Printf("Using simple SVG-based banner generation")
 
-	githubClient := github.NewClient(appConfig.GitHub.Token)
+	githubClient := github.NewClient(appConfig.GitHub.Token, cfg.APICacheDuration)
 
 	// Create handler
 	handler := api.NewHandler(svgBuilder, githubClient, cfg)

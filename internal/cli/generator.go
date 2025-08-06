@@ -37,7 +37,7 @@ func NewGeneratorWithConfig(appConfig *config.AppConfig) (*Generator, error) {
 
 	return &Generator{
 		svgBuilder:   svgBuilder,
-		githubClient: github.NewClient(appConfig.GitHub.Token),
+		githubClient: github.NewClient(appConfig.GitHub.Token, 1*time.Hour), // Use 1 hour cache for CLI
 	}, nil
 }
 

@@ -32,3 +32,9 @@ enabled = true
 allowed_orgs = ["numtide", "nix-community"]
 # Allowed GitHub users (for specific exceptions if needed)
 allowed_users = []
+
+[cache]
+# HTTP cache duration - how long browsers/CDNs should cache banner images
+http_cache_duration = "1h"
+# API cache duration - how long to cache GitHub API responses
+api_cache_duration = "1h"

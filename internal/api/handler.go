@@ -83,7 +83,7 @@ func (h *Handler) GenerateBanner(w http.ResponseWriter, r *http.Request) {
 
 	// Set headers
 	w.Header().Set("Content-Type", "image/svg+xml")
-	w.Header().Set("Cache-Control", "public, max-age=300") // Cache for 5 minutes
+	w.Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", int(h.config.HTTPCacheDuration.Seconds())))
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// Write SVG
@@ -137,7 +137,7 @@ func (h *Handler) GeneratePNGBanner(w http.ResponseWriter, r *http.Request) {
 
 	// Set headers
 	w.Header().Set("Content-Type", "image/png")
-	w.Header().Set("Cache-Control", "public, max-age=300") // Cache for 5 minutes
+	w.Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", int(h.config.HTTPCacheDuration.Seconds())))
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// Write PNG
