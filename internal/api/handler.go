@@ -446,7 +446,7 @@ func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
 
         <div class="generator-section">
             <div class="input-group">
-                <input type="text" id="repoInput" placeholder="Enter repository (e.g., owner/repo)" value="numtide/treefmt">
+                <input type="text" id="repoInput" placeholder="Enter repository (e.g., owner/repo)" value="numtide/banner-generator">
                 <button onclick="generateBanner()">Generate Banner</button>
             </div>
             
