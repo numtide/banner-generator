@@ -61,10 +61,13 @@
       fill: var(--text-color);
     }
     
-    rect.grid-line,
-    path.decorative {
+    rect.grid-line {
       fill: var(--grid-color);
+    }
+    
+    path.decorative {
       stroke: var(--grid-color);
+      fill: none;
     }
   </style>
   <!-- Background -->
