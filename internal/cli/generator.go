@@ -72,7 +72,6 @@ func (g *Generator) GeneratePNG(repoPath, outputPath string) error {
 	}
 
 	// Generate SVG
-	// Generate SVG directly with repository data
 	svg, err := g.svgBuilder.BuildBanner(repoData)
 	if err != nil {
 		return fmt.Errorf("failed to generate SVG: %w", err)
