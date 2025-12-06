@@ -2,6 +2,7 @@ package banner
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -44,41 +45,51 @@ func (b *SimpleSVGBuilder) BuildBanner(repo *github.Repository) (string, error) 
 
 	// Update repository name
 	if err := doc.UpdateTextByID("repo-name", repo.Name); err != nil {
-		// Ignore error - element might not exist in template
-		_ = err
+		log.Printf("debug: repo-name element not found in template: %v", err)
 	}
 
 	// Update description with multi-line support
 	if repo.Description != "" {
 		lines := wrapText(repo.Description, 50) // 50 chars per line
 		if err := doc.UpdateMultilineText("description", lines); err != nil {
-			// Ignore error - element might not exist in template
-			_ = err
+			log.Printf("debug: description element not found in template: %v", err)
 		}
 	} else {
 		// Hide description if empty
-		_ = doc.HideElementByID("description")
+		if err := doc.HideElementByID("description"); err != nil {
+			log.Printf("debug: description element not found in template: %v", err)
+		}
 	}
 
 	// Update stats
 	if repo.StargazersCount > 0 || repo.ForksCount > 0 {
 		// Format star count
 		stars := utils.FormatCount(repo.StargazersCount)
-		_ = doc.UpdateTextByID("stats-stars", fmt.Sprintf("⭐ %s", stars))
+		if err := doc.UpdateTextByID("stats-stars", fmt.Sprintf("⭐ %s", stars)); err != nil {
+			log.Printf("debug: stats-stars element not found in template: %v", err)
+		}
 
 		// Format fork count
 		forks := utils.FormatCount(repo.ForksCount)
-		_ = doc.UpdateTextByID("stats-forks", fmt.Sprintf("🍴 %s", forks))
+		if err := doc.UpdateTextByID("stats-forks", fmt.Sprintf("🍴 %s", forks)); err != nil {
+			log.Printf("debug: stats-forks element not found in template: %v", err)
+		}
 
 		// Update language if available
 		if repo.Language != "" {
-			_ = doc.UpdateTextByID("stats-language", repo.Language)
+			if err := doc.UpdateTextByID("stats-language", repo.Language); err != nil {
+				log.Printf("debug: stats-language element not found in template: %v", err)
+			}
 		} else {
-			_ = doc.HideElementByID("stats-language")
+			if err := doc.HideElementByID("stats-language"); err != nil {
+				log.Printf("debug: stats-language element not found in template: %v", err)
+			}
 		}
 	} else {
 		// Hide stats group if no data
-		_ = doc.HideElementByID("stats-group")
+		if err := doc.HideElementByID("stats-group"); err != nil {
+			log.Printf("debug: stats-group element not found in template: %v", err)
+		}
 	}
 
 	// Generate font CSS
@@ -89,8 +100,7 @@ func (b *SimpleSVGBuilder) BuildBanner(repo *github.Repository) (string, error) 
 
 	// Inject font CSS
 	if err := doc.InjectCSS("font-css", fontCSS); err != nil {
-		// Try injecting into any style element
-		_ = err
+		log.Printf("debug: font-css style element not found in template: %v", err)
 	}
 
 	return doc.String(), nil
