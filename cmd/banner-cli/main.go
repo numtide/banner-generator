@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/numtide/banner-generator/internal/cli"
@@ -146,7 +145,7 @@ and uploading them to GitHub repositories for social media previews.`,
 	rootCmd.AddCommand(generateUploadCmd)
 
 	if err := rootCmd.Execute(); err != nil {
-		log.Fatal(err)
+		os.Exit(1)
 	}
 }
 
