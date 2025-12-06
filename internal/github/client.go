@@ -3,15 +3,18 @@ package github
 import (
 	"context"
 	"fmt"
+	"sync"
+	"time"
+
 	"github.com/google/go-github/v56/github"
 	"golang.org/x/oauth2"
-	"time"
 )
 
 // Client wraps the GitHub API client
 type Client struct {
 	client        *github.Client
 	cache         map[string]*cacheEntry
+	cacheMu       sync.RWMutex
 	cacheDuration time.Duration
 }
 
@@ -51,11 +54,13 @@ func NewClient(token string, cacheDuration time.Duration) *Client {
 func (c *Client) GetRepositoryData(ctx context.Context, owner, repo string) (*Repository, error) {
 	// Check cache first
 	cacheKey := fmt.Sprintf("%s/%s", owner, repo)
-	if entry, ok := c.cache[cacheKey]; ok {
-		// Use configured cache duration
-		if time.Since(entry.timestamp) < c.cacheDuration {
-			return entry.data, nil
-		}
+
+	c.cacheMu.RLock()
+	entry, ok := c.cache[cacheKey]
+	c.cacheMu.RUnlock()
+
+	if ok && time.Since(entry.timestamp) < c.cacheDuration {
+		return entry.data, nil
 	}
 
 	// Fetch repository information
@@ -75,10 +80,12 @@ func (c *Client) GetRepositoryData(ctx context.Context, owner, repo string) (*Re
 	}
 
 	// Update cache
+	c.cacheMu.Lock()
 	c.cache[cacheKey] = &cacheEntry{
 		data:      data,
 		timestamp: time.Now(),
 	}
+	c.cacheMu.Unlock()
 
 	return data, nil
 }
