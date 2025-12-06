@@ -14,6 +14,7 @@ import (
 	"github.com/numtide/banner-generator/internal/config"
 	"github.com/numtide/banner-generator/internal/converter"
 	"github.com/numtide/banner-generator/internal/github"
+	"github.com/numtide/banner-generator/internal/version"
 )
 
 //go:embed index.html
@@ -39,7 +40,8 @@ func NewHandler(svgBuilder banner.Builder, githubClient *github.Client, cfg *con
 func (h *Handler) HealthCheck(w http.ResponseWriter, r *http.Request) {
 	response := map[string]interface{}{
 		"status":  "healthy",
-		"version": "1.0.0",
+		"version": version.Version,
+		"commit":  version.Commit,
 		"time":    time.Now().Format(time.RFC3339),
 	}
 

@@ -1,5 +1,10 @@
 .PHONY: build build-api build-cli run-api test fmt lint clean deps dev install help
 
+# Version info
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
+COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+LDFLAGS := -ldflags "-s -w -X github.com/numtide/banner-generator/internal/version.Version=$(VERSION) -X github.com/numtide/banner-generator/internal/version.Commit=$(COMMIT)"
+
 # Default target
 all: fmt lint test build
 
@@ -9,12 +14,12 @@ build: build-api build-cli
 # Build API server
 build-api:
 	@echo "Building API server..."
-	go build -o bin/banner-api ./cmd/banner-api
+	go build $(LDFLAGS) -o bin/banner-api ./cmd/banner-api
 
 # Build CLI tool
 build-cli:
 	@echo "Building CLI tool..."
-	go build -o bin/banner-cli ./cmd/banner-cli
+	go build $(LDFLAGS) -o bin/banner-cli ./cmd/banner-cli
 
 # Install binaries to GOPATH
 install:
@@ -90,12 +95,12 @@ sec:
 # Create release build
 release:
 	@echo "Building release binaries..."
-	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/banner-api-linux-amd64 ./cmd/banner-api
-	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/banner-cli-linux-amd64 ./cmd/banner-cli
-	GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o bin/banner-api-darwin-amd64 ./cmd/banner-api
-	GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o bin/banner-cli-darwin-amd64 ./cmd/banner-cli
-	GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o bin/banner-api-darwin-arm64 ./cmd/banner-api
-	GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o bin/banner-cli-darwin-arm64 ./cmd/banner-cli
+	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o bin/banner-api-linux-amd64 ./cmd/banner-api
+	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o bin/banner-cli-linux-amd64 ./cmd/banner-cli
+	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o bin/banner-api-darwin-amd64 ./cmd/banner-api
+	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o bin/banner-cli-darwin-amd64 ./cmd/banner-cli
+	GOOS=darwin GOARCH=arm64 go build $(LDFLAGS) -o bin/banner-api-darwin-arm64 ./cmd/banner-api
+	GOOS=darwin GOARCH=arm64 go build $(LDFLAGS) -o bin/banner-cli-darwin-arm64 ./cmd/banner-cli
 
 # Show help
 help:
