@@ -27,12 +27,15 @@ nix run github:numtide/banner-generator#banner-cli
 ## CLI Usage
 
 ```bash
-# Generate PNG
+# Generate PNG banner
 banner-cli generate owner/repo -o banner.png
 
-# Generate and upload to GitHub
-banner-cli generate-upload owner/repo --token $GITHUB_TOKEN
+# Generate without stats (for social preview that won't get stale)
+banner-cli generate owner/repo --no-stats -o banner.png
 ```
+
+After generating, upload the PNG as social preview via:
+Repository Settings > Social preview > Edit
 
 ## Configuration
 

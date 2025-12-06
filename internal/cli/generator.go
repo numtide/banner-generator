@@ -42,7 +42,7 @@ func NewGeneratorWithConfig(appConfig *config.AppConfig) (*Generator, error) {
 }
 
 // GeneratePNG generates a PNG banner for the specified repository
-func (g *Generator) GeneratePNG(repoPath, outputPath string) error {
+func (g *Generator) GeneratePNG(repoPath, outputPath string, noStats bool) error {
 	// Parse owner/repo format
 	parts := strings.Split(repoPath, "/")
 	if len(parts) != 2 {
@@ -64,6 +64,13 @@ func (g *Generator) GeneratePNG(repoPath, outputPath string) error {
 	repoData, err := g.githubClient.GetRepositoryData(ctx, owner, repo)
 	if err != nil {
 		return fmt.Errorf("failed to fetch repository data: %w", err)
+	}
+
+	// Clear stats if --no-stats flag is set
+	if noStats {
+		repoData.StargazersCount = 0
+		repoData.ForksCount = 0
+		repoData.Language = ""
 	}
 
 	fmt.Printf("Generating banner for: %s\n", repoData.Name)
