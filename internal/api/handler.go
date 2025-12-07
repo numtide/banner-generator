@@ -12,7 +12,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/numtide/banner-generator/internal/banner"
 	"github.com/numtide/banner-generator/internal/config"
-	"github.com/numtide/banner-generator/internal/converter"
 	"github.com/numtide/banner-generator/internal/github"
 	"github.com/numtide/banner-generator/internal/version"
 )
@@ -96,60 +95,6 @@ func (h *Handler) GenerateBanner(w http.ResponseWriter, r *http.Request) {
 	if _, err := w.Write([]byte(svg)); err != nil {
 		// Log error but can't send error response as headers are already sent
 		log.Printf("Failed to write SVG response: %v", err)
-	}
-}
-
-// GeneratePNGBanner generates a PNG banner for a GitHub repository
-func (h *Handler) GeneratePNGBanner(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	owner := vars["owner"]
-	repo := vars["repo"]
-
-	if owner == "" || repo == "" {
-		http.Error(w, "Invalid repository format", http.StatusBadRequest)
-		return
-	}
-
-	// Check access control
-	if !h.config.IsAllowed(owner, repo) {
-		http.Error(w, "Access denied: This repository is not allowed", http.StatusForbidden)
-		return
-	}
-
-	// Create context with timeout
-	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
-	defer cancel()
-
-	// Fetch repository data
-	repoData, err := h.githubClient.GetRepositoryData(ctx, owner, repo)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Failed to fetch repository data: %v", err), http.StatusNotFound)
-		return
-	}
-
-	// Generate SVG
-	svg, err := h.svgBuilder.BuildBanner(repoData)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Failed to generate banner: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	// Convert SVG to PNG
-	pngData, err := converter.SVGToPNG([]byte(svg))
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Failed to convert to PNG: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	// Set headers
-	w.Header().Set("Content-Type", "image/png")
-	w.Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", int(h.config.HTTPCacheDuration.Seconds())))
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
-	// Write PNG
-	if _, err := w.Write(pngData); err != nil {
-		// Log error but can't send error response as headers are already sent
-		log.Printf("Failed to write PNG response: %v", err)
 	}
 }
 

@@ -103,7 +103,6 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/health", handler.HealthCheck).Methods("GET")
 	r.HandleFunc("/banner/{owner}/{repo}.svg", handler.GenerateBanner).Methods("GET")
-	r.HandleFunc("/banner/{owner}/{repo}.png", handler.GeneratePNGBanner).Methods("GET")
 	r.HandleFunc("/", handler.Index).Methods("GET")
 
 	// Serve font files using font manager

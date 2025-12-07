@@ -42,7 +42,7 @@ func NewGeneratorWithConfig(appConfig *config.AppConfig) (*Generator, error) {
 }
 
 // GeneratePNG generates a PNG banner for the specified repository
-func (g *Generator) GeneratePNG(repoPath, outputPath string, noStats bool) error {
+func (g *Generator) GeneratePNG(repoPath, outputPath string, noStats, darkMode bool) error {
 	// Parse owner/repo format
 	parts := strings.Split(repoPath, "/")
 	if len(parts) != 2 {
@@ -85,8 +85,14 @@ func (g *Generator) GeneratePNG(repoPath, outputPath string, noStats bool) error
 	}
 
 	// Convert SVG to PNG
-	fmt.Println("Converting SVG to PNG...")
-	pngData, err := converter.SVGToPNG([]byte(svg))
+	colorScheme := converter.ColorSchemeLight
+	if darkMode {
+		colorScheme = converter.ColorSchemeDark
+		fmt.Println("Converting SVG to PNG (dark mode)...")
+	} else {
+		fmt.Println("Converting SVG to PNG (light mode)...")
+	}
+	pngData, err := converter.SVGToPNGWithColorScheme([]byte(svg), colorScheme)
 	if err != nil {
 		return fmt.Errorf("failed to convert SVG to PNG: %w", err)
 	}

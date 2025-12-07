@@ -18,6 +18,7 @@ GitHub repository social media previews.
 
 After generating the banner, upload it manually via:
   Repository Settings > Social preview > Edit`,
+		SilenceUsage: true,
 	}
 
 	// Global flags
@@ -26,6 +27,7 @@ After generating the banner, upload it manually via:
 		githubToken string
 		outputPath  string
 		noStats     bool
+		darkMode    bool
 	)
 
 	rootCmd.PersistentFlags().StringVar(&configPath, "config", "", "Path to configuration file")
@@ -58,7 +60,7 @@ After generating, upload the banner as social preview via:
 			}
 
 			repoPath := args[0]
-			if err := generator.GeneratePNG(repoPath, outputPath, noStats); err != nil {
+			if err := generator.GeneratePNG(repoPath, outputPath, noStats, darkMode); err != nil {
 				return err
 			}
 
@@ -74,6 +76,7 @@ After generating, upload the banner as social preview via:
 
 	generateCmd.Flags().StringVarP(&outputPath, "output", "o", "banner.png", "Output path for PNG file")
 	generateCmd.Flags().BoolVar(&noStats, "no-stats", false, "Omit stars, forks, and language from banner")
+	generateCmd.Flags().BoolVar(&darkMode, "dark", false, "Use dark color scheme (default is light)")
 	rootCmd.AddCommand(generateCmd)
 
 	if err := rootCmd.Execute(); err != nil {

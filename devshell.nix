@@ -18,10 +18,8 @@ pkgs.mkShell {
     # Development tools
     inputs.gorefresh.packages.${pkgs.system}.default
 
-    # SVG to PNG conversion tools (for the banner-cli)
-    pkgs.librsvg
-    pkgs.inkscape
-    pkgs.imagemagick
+    # SVG to PNG conversion (CLI only, uses headless Chrome)
+    pkgs.chromium
 
     # Deploy
     pkgs.flyctl

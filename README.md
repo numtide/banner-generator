@@ -1,6 +1,6 @@
 ![Numtide Banner Generator](https://banner.numtide.com/banner/numtide/banner-generator.svg?1)
 
-Generates SVG and PNG banners for Numtide's GitHub repositories with automatic metadata fetching.
+Generates SVG banners for Numtide's GitHub repositories with automatic metadata fetching.
 
 ## Quick Start
 
@@ -22,9 +22,11 @@ nix run github:numtide/banner-generator#banner-cli
 ## API Endpoints
 
 - `GET /banner/{owner}/{repo}.svg` - Generate SVG banner
-- `GET /banner/{owner}/{repo}.png` - Generate PNG banner
 
 ## CLI Usage
+
+The CLI can generate PNG banners for use as GitHub social preview images.
+It requires Chromium to be installed (uses headless Chrome for rendering).
 
 ```bash
 # Generate PNG banner
@@ -32,6 +34,9 @@ banner-cli generate owner/repo -o banner.png
 
 # Generate without stats (for social preview that won't get stale)
 banner-cli generate owner/repo --no-stats -o banner.png
+
+# Generate with dark color scheme
+banner-cli generate owner/repo --dark -o banner.png
 ```
 
 After generating, upload the PNG as social preview via:
@@ -49,8 +54,8 @@ Templates are pure SVG files with specific element IDs that get replaced dynamic
 |------------|-------------|-----------------|
 | `repo-name` | Repository name text | "banner-generator" |
 | `description` | Description text (can contain tspan elements) | "Generate banners..." |
-| `stats-stars` | Stars count text | "⭐ 1.2k" |
-| `stats-forks` | Forks count text | "🍴 45" |
+| `stats-stars` | Stars count text | "1.2k" |
+| `stats-forks` | Forks count text | "45" |
 | `stats-language` | Primary language text | "Go" |
 | `stats-group` | Stats container (hidden if no data) | - |
 | `font-css` | Style element for font injection | - |
