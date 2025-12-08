@@ -3,6 +3,65 @@
 <head>
     <title>Numtide Banner Generator</title>
     <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #010409;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent: #58a6ff;
+            --border: #30363d;
+            --border-hover: #484f58;
+            --btn-primary: #238636;
+            --btn-primary-hover: #2ea043;
+            --btn-secondary: #21262d;
+            --btn-secondary-hover: #30363d;
+            --error-text: #f85149;
+            --error-bg: rgba(248, 81, 73, 0.1);
+            --error-border: rgba(248, 81, 73, 0.3);
+            --shadow: rgba(0,0,0,0.3);
+            color-scheme: dark;
+        }
+        :root[data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f6f8fa;
+            --bg-tertiary: #f0f0f0;
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --accent: #0969da;
+            --border: #d0d7de;
+            --border-hover: #8c959f;
+            --btn-primary: #2da44e;
+            --btn-primary-hover: #2c974b;
+            --btn-secondary: #f3f4f6;
+            --btn-secondary-hover: #e5e7eb;
+            --error-text: #cf222e;
+            --error-bg: rgba(207, 34, 46, 0.1);
+            --error-border: rgba(207, 34, 46, 0.3);
+            --shadow: rgba(0,0,0,0.1);
+            color-scheme: light;
+        }
+        @media (prefers-color-scheme: light) {
+            :root:not([data-theme="dark"]) {
+                --bg-primary: #ffffff;
+                --bg-secondary: #f6f8fa;
+                --bg-tertiary: #f0f0f0;
+                --text-primary: #24292f;
+                --text-secondary: #57606a;
+                --accent: #0969da;
+                --border: #d0d7de;
+                --border-hover: #8c959f;
+                --btn-primary: #2da44e;
+                --btn-primary-hover: #2c974b;
+                --btn-secondary: #f3f4f6;
+                --btn-secondary-hover: #e5e7eb;
+                --error-text: #cf222e;
+                --error-bg: rgba(207, 34, 46, 0.1);
+                --error-border: rgba(207, 34, 46, 0.3);
+                --shadow: rgba(0,0,0,0.1);
+                color-scheme: light;
+            }
+        }
         * {
             box-sizing: border-box;
         }
@@ -10,8 +69,8 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 0;
-            background: #0d1117;
-            color: #c9d1d9;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -25,23 +84,41 @@
         header {
             text-align: center;
             margin-bottom: 3rem;
+            position: relative;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--btn-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover {
+            background: var(--btn-secondary-hover);
+            border-color: var(--border-hover);
         }
         h1 {
-            color: #58a6ff;
+            color: var(--accent);
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
         }
         .tagline {
             font-size: 1.2rem;
-            color: #8b949e;
+            color: var(--text-secondary);
             margin-bottom: 2rem;
         }
         .generator-section {
-            background: #161b22;
+            background: var(--bg-secondary);
             border-radius: 8px;
             padding: 2rem;
             margin: 3rem 0;
-            border: 1px solid #30363d;
+            border: 1px solid var(--border);
         }
         .input-group {
             display: flex;
@@ -52,19 +129,19 @@
             flex: 1;
             padding: 0.8rem;
             font-size: 1rem;
-            background: #0d1117;
-            border: 1px solid #30363d;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
             border-radius: 6px;
-            color: #c9d1d9;
+            color: var(--text-primary);
         }
         input[type="text"]:focus {
             outline: none;
-            border-color: #58a6ff;
+            border-color: var(--accent);
         }
         button {
             padding: 0.8rem 1.5rem;
             font-size: 1rem;
-            background: #238636;
+            background: var(--btn-primary);
             color: white;
             border: none;
             border-radius: 6px;
@@ -72,21 +149,22 @@
             transition: background 0.2s;
         }
         button:hover {
-            background: #2ea043;
+            background: var(--btn-primary-hover);
         }
         button.secondary {
-            background: #21262d;
-            border: 1px solid #30363d;
+            background: var(--btn-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
         }
         button.secondary:hover {
-            background: #30363d;
+            background: var(--btn-secondary-hover);
         }
         .error {
-            color: #f85149;
+            color: var(--error-text);
             margin: 1rem 0;
             padding: 0.8rem;
-            background: rgba(248, 81, 73, 0.1);
-            border: 1px solid rgba(248, 81, 73, 0.3);
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
             border-radius: 6px;
             display: none;
         }
@@ -104,21 +182,24 @@
         .preview-container img {
             max-width: 100%;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px var(--shadow);
         }
         code {
-            background: #161b22;
+            background: var(--bg-secondary);
             padding: 0.2rem 0.4rem;
             border-radius: 3px;
             font-family: monospace;
         }
         pre {
-            background: #0d1117;
+            background: var(--bg-primary);
             padding: 1rem;
             border-radius: 6px;
             overflow-x: auto;
-            border: 1px solid #30363d;
+            border: 1px solid var(--border);
             position: relative;
+        }
+        pre code {
+            background: transparent;
         }
         .copy-button {
             position: absolute;
@@ -126,34 +207,35 @@
             right: 0.5rem;
             padding: 0.4rem 0.8rem;
             font-size: 0.875rem;
-            background: #30363d;
-            color: #c9d1d9;
-            border: 1px solid #484f58;
+            background: var(--btn-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
         }
         .copy-button:hover {
-            background: #484f58;
-            border-color: #6e7681;
+            background: var(--btn-secondary-hover);
+            border-color: var(--border-hover);
         }
         .copy-button.copied {
-            background: #238636;
-            border-color: #2ea043;
+            background: var(--btn-primary);
+            border-color: var(--btn-primary-hover);
+            color: white;
         }
         footer {
-            background: #010409;
-            border-top: 1px solid #30363d;
+            background: var(--bg-tertiary);
+            border-top: 1px solid var(--border);
             padding: 2rem;
             text-align: center;
             margin-top: auto;
         }
         footer p {
             margin: 0;
-            color: #8b949e;
+            color: var(--text-secondary);
         }
         footer a {
-            color: #58a6ff;
+            color: var(--accent);
             text-decoration: none;
         }
         footer a:hover {
@@ -167,29 +249,33 @@
             flex-wrap: wrap;
         }
         .footer-divider {
-            color: #30363d;
+            color: var(--border);
             user-select: none;
         }
         .section-title {
             font-size: 1.2rem;
-            color: #58a6ff;
+            color: var(--accent);
             margin-bottom: 1rem;
         }
         .cli-section {
             margin-top: 2rem;
             padding: 1.5rem;
-            background: #0d1117;
+            background: var(--bg-primary);
             border-radius: 6px;
-            border: 1px solid #30363d;
+            border: 1px solid var(--border);
         }
         .cli-section h3 {
             margin-top: 0;
+        }
+        .cli-section a {
+            color: var(--accent);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <button class="theme-toggle" id="themeToggle" title="Toggle theme">Light</button>
             <h1>Numtide Banner Generator</h1>
             <p class="tagline">Generate beautiful, consistent banners for Numtide repositories</p>
         </header>
@@ -321,6 +407,56 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             generateBanner();
+        });
+
+        // Theme toggle functionality
+        function getSystemTheme() {
+            return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+
+        function getCurrentTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            return getSystemTheme();
+        }
+
+        function updateThemeToggleButton() {
+            const btn = document.getElementById('themeToggle');
+            const theme = getCurrentTheme();
+            btn.textContent = theme === 'dark' ? 'Light' : 'Dark';
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            updateThemeToggleButton();
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            const current = getCurrentTheme();
+            const next = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', next);
+            applyTheme(next);
+        });
+
+        // Apply saved theme on load
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved) {
+                applyTheme(saved);
+            } else {
+                updateThemeToggleButton();
+            }
+        })();
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
+            if (!localStorage.getItem('theme')) {
+                updateThemeToggleButton();
+            }
         });
     </script>
 </body>
