@@ -15,10 +15,10 @@ type Font struct {
 	Variants map[string]string // Map of format to file path (e.g., "woff2" -> "path/to/font.woff2")
 }
 
-// GetFontPath returns the path to the font file, preferring WOFF format
+// GetFontPath returns the path to the font file, preferring WOFF2 format
 func (f *Font) GetFontPath() string {
 	// Try formats in order of preference
-	formats := []string{"woff", "woff2", "ttf", "otf"}
+	formats := []string{"woff2", "woff", "ttf", "otf"}
 	for _, format := range formats {
 		if path, ok := f.Variants[format]; ok {
 			return path
