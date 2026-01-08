@@ -141,10 +141,10 @@ func (b *SimpleSVGBuilder) generateFontCSS(svgContent string) (string, error) {
 
 		if b.enableWebFonts {
 			// Use web fonts with URLs
-			cssBuilder.WriteString(b.generateWebFontCSS(font))
+			cssBuilder.WriteString(b.generateWebFontCSS(font, family))
 		} else {
 			// Embed font data
-			cssBuilder.WriteString(b.generateEmbeddedFontCSS(font))
+			cssBuilder.WriteString(b.generateEmbeddedFontCSS(font, family))
 		}
 		cssBuilder.WriteString("\n")
 	}
@@ -153,10 +153,10 @@ func (b *SimpleSVGBuilder) generateFontCSS(svgContent string) (string, error) {
 }
 
 // generateWebFontCSS generates @font-face CSS with URLs
-func (b *SimpleSVGBuilder) generateWebFontCSS(font *fonts.Font) string {
+func (b *SimpleSVGBuilder) generateWebFontCSS(font *fonts.Font, familyName string) string {
 	var css strings.Builder
 	css.WriteString("@font-face {\n")
-	css.WriteString(fmt.Sprintf("  font-family: '%s';\n", font.Family))
+	css.WriteString(fmt.Sprintf("  font-family: '%s';\n", familyName))
 	css.WriteString("  src: ")
 
 	var sources []string
@@ -189,7 +189,7 @@ func (b *SimpleSVGBuilder) generateWebFontCSS(font *fonts.Font) string {
 }
 
 // generateEmbeddedFontCSS generates @font-face CSS with embedded data
-func (b *SimpleSVGBuilder) generateEmbeddedFontCSS(font *fonts.Font) string {
+func (b *SimpleSVGBuilder) generateEmbeddedFontCSS(font *fonts.Font, familyName string) string {
 	fontPath := font.GetFontPath()
 	if fontPath == "" {
 		return ""
@@ -212,7 +212,7 @@ func (b *SimpleSVGBuilder) generateEmbeddedFontCSS(font *fonts.Font) string {
   src: url(%s) format('%s');
   font-weight: normal;
   font-style: normal;
-}`, font.Family, fontData, format)
+}`, familyName, fontData, format)
 }
 
 // wrapText breaks text into lines based on character count
