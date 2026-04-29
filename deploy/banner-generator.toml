@@ -29,7 +29,7 @@ token = ""
 # Enable access control - restricted to numtide and nix-community
 enabled = true
 # Allowed GitHub organizations
-allowed_orgs = ["numtide", "nix-community"]
+allowed_orgs = ["numtide", "nix-community", "skarnos"]
 # Allowed GitHub users (for specific exceptions if needed)
 allowed_users = []
 
