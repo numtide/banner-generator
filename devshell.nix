@@ -18,12 +18,11 @@ pkgs.mkShell {
     # Development tools
     inputs.gorefresh.packages.${pkgs.system}.default
 
-    # SVG to PNG conversion (CLI only, uses headless Chrome)
-    pkgs.chromium
-
     # Deploy
     pkgs.flyctl
-  ];
+  ]
+  # SVG to PNG conversion uses headless Chrome. Chromium is Linux-only: on macOS, set CHROME_PATH.
+  ++ pkgs.lib.optional pkgs.stdenv.hostPlatform.isLinux pkgs.chromium;
 
   # Add environment variables
   env = {
